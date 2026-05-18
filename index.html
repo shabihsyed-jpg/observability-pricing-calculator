@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observability Pricing Calculator | Compare SaaS vs Self-Hosted</title>
+<meta name="description" content="Calculate and compare observability costs for SigNoz, Grafana Cloud, New Relic, Datadog, Honeycomb, and self-hosted observability stacks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:oklch(13% 0.012 240);
+  --card:oklch(16% 0.011 240);
+  --card2:oklch(17% 0.012 240);
+  --card3:oklch(18% 0.012 240);
+  --input-bg:oklch(14% 0.01 240);
+  --slider-bg:oklch(33% 0.018 240);
+  --input-border:oklch(37% 0.018 240);
+  --border:oklch(29% 0.012 240);
+  --border2:oklch(31% 0.014 240);
+  --border3:oklch(34% 0.02 240);
+  --text:oklch(95% 0.01 240);
+  --text-body:oklch(70% 0.018 240);
+  --text-muted:oklch(58% 0.018 240);
+  --text-mono:oklch(91% 0.012 240);
+  --accent:oklch(72% 0.15 165);
+  --accent-hover:oklch(78% 0.14 165);
+  --accent-text:oklch(15% 0.018 165);
+  --green-text:oklch(84% 0.11 165);
+  --green-dim:oklch(18% 0.026 165);
+  --green-card:oklch(15% 0.014 165);
+  --green-border:oklch(37% 0.04 165);
+  --green-border2:oklch(42% 0.052 165);
+  --green-section:oklch(19% 0.025 165);
+  --badge-bg:oklch(25% 0.018 240);
+  --text-92:oklch(92% 0.012 240);
+  --text-94:oklch(94% 0.01 240);
+  --text-68:oklch(68% 0.018 240);
+  --text-66:oklch(66% 0.018 240);
+  --border-28:oklch(28% 0.012 240);
+  --border-27:oklch(27% 0.012 240);
+  --card-hover:oklch(20% 0.012 240);
+}
+html{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+body{min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input{font-family:inherit}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* Layout */
+.max-w-6xl{max-width:72rem;margin-left:auto;margin-right:auto}
+
+/* Hero grid */
+.hero-grid{display:grid;gap:2rem}
+@media(min-width:1024px){.hero-grid{grid-template-columns:1.15fr 0.85fr;align-items:end}}
+
+/* Page grid */
+.page-grid{display:grid;gap:1.5rem}
+@media(min-width:1280px){.page-grid{grid-template-columns:minmax(0,1fr) 24rem}}
+
+/* Sidebar sticky */
+@media(min-width:1280px){.sidebar{position:sticky;top:6rem;align-self:start}}
+
+.space-y-6>*+*{margin-top:1.5rem}
+.space-y-3>*+*{margin-top:0.75rem}
+
+/* Cards */
+.section-card{border-radius:0.75rem;border:1px solid var(--border2);background:var(--card);padding:1.25rem}
+.section-card2{border-radius:0.75rem;border:1px solid var(--border2);background:var(--card2);padding:1.25rem}
+.hero-stat-card{border-radius:0.75rem;border:1px solid var(--border3);background:var(--card2);padding:1.25rem}
+
+/* Vendor cards */
+.vendor-grid{display:grid;gap:1rem}
+@media(min-width:768px){.vendor-grid{grid-template-columns:repeat(2,1fr)}}
+.vendor-card{border-radius:0.5rem;border:1px solid;padding:1rem}
+.vendor-card.highlighted{border-color:oklch(40% 0.05 165);background:var(--green-section)}
+.vendor-card.muted{border-color:oklch(29% 0.012 240);background:oklch(16% 0.01 240)}
+
+/* Slider */
+.slider-wrap{border-radius:0.5rem;border:1px solid oklch(31% 0.014 240);background:oklch(18% 0.012 240);padding:1rem}
+.slider-header{display:flex;flex-direction:column;gap:0.75rem}
+@media(min-width:640px){.slider-header{flex-direction:row;align-items:flex-start;justify-content:space-between}}
+.slider-label{display:block;font-size:0.875rem;font-weight:600;color:var(--text-mono)}
+.slider-helper{margin-top:0.25rem;font-size:0.75rem;line-height:1.5;color:oklch(68% 0.018 240);max-width:52ch}
+.slider-input-wrap{display:flex;align-items:center;gap:0.5rem;border-radius:0.375rem;border:1px solid var(--input-border);background:var(--input-bg);padding:0.5rem 0.75rem;min-width:12rem;flex-shrink:0}
+.slider-input-wrap input[type=number]{width:100%;background:transparent;border:none;outline:none;text-align:right;font-family:'Manrope',monospace;font-size:0.875rem;color:oklch(94% 0.012 240);-moz-appearance:textfield}
+.slider-input-wrap input[type=number]::-webkit-inner-spin-button,
+.slider-input-wrap input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+.slider-unit{font-size:0.75rem;font-weight:500;color:var(--text-body);white-space:nowrap}
+.range-input{display:block;margin-top:1rem;height:0.5rem;width:100%;cursor:pointer;appearance:none;border-radius:9999px;background:var(--slider-bg);accent-color:var(--accent);outline:none}
+.range-input::-webkit-slider-thumb{appearance:none;width:1rem;height:1rem;border-radius:9999px;background:var(--accent);cursor:pointer;border:none}
+.range-input::-moz-range-thumb{width:1rem;height:1rem;border-radius:9999px;background:var(--accent);cursor:pointer;border:none}
+.marks-row{margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between;gap:0.5rem}
+.mark-btn{border-radius:0.25rem;padding:0.25rem 0.375rem;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);background:transparent;transition:color 0.15s;white-space:nowrap}
+.mark-btn:hover,.mark-btn.active{color:oklch(84% 0.08 165)}
+.mark-btn:focus-visible{outline:2px solid var(--accent)}
+
+/* Infra grid */
+.infra-grid{display:grid;gap:0.75rem;margin-top:1.25rem}
+@media(min-width:768px){.infra-grid{grid-template-columns:repeat(2,1fr)}}
+.full-width{grid-column:1/-1}
+
+/* Infra summary */
+.infra-summary{display:grid;gap:0;border-top:1px solid oklch(28% 0.012 240);padding-top:0;margin-top:1.25rem}
+@media(min-width:640px){.infra-summary{grid-template-columns:repeat(4,1fr)}}
+.infra-stat{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--border-27);padding:0.75rem 0}
+.infra-stat:last-child{border-bottom:none}
+.infra-stat-label{font-size:0.875rem;color:var(--text-body)}
+.infra-stat-value{font-family:'Manrope',monospace;font-size:0.875rem;color:var(--text-mono);text-align:right}
+@media(min-width:640px){
+  .infra-stat{flex-direction:column;align-items:flex-start;gap:0.25rem;border-bottom:none;border-right:1px solid var(--border-27);padding:0.75rem 1rem}
+  .infra-stat:last-child{border-right:none}
+  .infra-stat-value{text-align:left}
+}
+
+/* Data profile rows */
+.profile-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid oklch(27% 0.012 240);padding:0.75rem 0;font-size:0.875rem}
+.profile-row:last-child{border-bottom:none}
+.profile-row-label{color:var(--text-body)}
+.profile-row-value{font-family:'Manrope',monospace;color:var(--text-mono);text-align:right}
+
+/* Self-hosted stack cards */
+.stack-card{border-radius:0.5rem;border:1px solid var(--green-border);background:var(--green-card);padding:0.75rem}
+.stack-header{display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem}
+.stack-name{font-size:0.875rem;font-weight:600;color:oklch(94% 0.01 165)}
+.stack-fullname{margin-top:0.25rem;font-size:0.75rem;color:oklch(67% 0.035 165)}
+.stack-price{text-align:right;font-family:'Manrope',monospace;font-size:0.875rem;color:var(--green-text);white-space:nowrap}
+.stack-desc{margin-top:0.5rem;font-size:0.75rem;line-height:1.5;color:oklch(72% 0.035 165)}
+.stack-mode{margin-top:0.5rem;font-size:0.75rem;line-height:1.5;color:oklch(84% 0.08 165)}
+
+/* Retention table */
+.retention-section{border-top:1px solid var(--border-28);border-bottom:1px solid var(--border-28);background:oklch(15% 0.011 240);padding:3rem 1rem}
+.table-wrap{margin-top:1.5rem;overflow-x:auto;border-radius:0.75rem;border:1px solid var(--border2)}
+table{width:100%;min-width:920px;font-size:0.875rem;border-collapse:collapse}
+thead{background:var(--card3)}
+th{padding:0.75rem 1rem;font-weight:500;color:var(--text-68);text-align:right}
+th:first-child{text-align:left}
+tbody tr{border-top:1px solid var(--border)}
+td{padding:0.75rem 1rem;text-align:right;font-family:'Manrope',monospace;color:var(--text-mono)}
+td:first-child{text-align:left;color:oklch(82% 0.014 240);font-family:'Manrope',sans-serif;font-variant-numeric:tabular-nums}
+td.green-col{color:var(--green-text)}
+td.hc-col{color:oklch(80% 0.12 60)}
+
+/* Retention buttons */
+.retention-btn-group{display:flex;border-radius:0.5rem;border:1px solid oklch(34% 0.018 240);background:var(--input-bg);padding:0.25rem;flex-shrink:0}
+.retention-btn{border-radius:0.375rem;padding:0.375rem 0.75rem;font-size:0.875rem;font-weight:500;transition:background 0.15s,color 0.15s;color:var(--text-68);white-space:nowrap}
+.retention-btn:hover{color:var(--text-mono)}
+.retention-btn.active{background:var(--accent);color:var(--accent-text)}
+.retention-btn:focus-visible{outline:2px solid var(--accent)}
+
+/* Buttons */
+.btn-primary{display:inline-flex;justify-content:center;align-items:center;border-radius:0.375rem;background:var(--accent);padding:0.5rem 1rem;font-size:0.875rem;font-weight:600;color:var(--accent-text);transition:background 0.15s;white-space:nowrap}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-lg-primary{display:inline-flex;justify-content:center;align-items:center;border-radius:0.375rem;background:var(--accent);padding:0.75rem 1.25rem;font-size:0.875rem;font-weight:600;color:var(--accent-text);transition:background 0.15s}
+.btn-lg-primary:hover{background:var(--accent-hover)}
+.btn-outline{display:inline-flex;justify-content:center;align-items:center;border-radius:0.375rem;border:1px solid oklch(38% 0.018 240);padding:0.75rem 1.25rem;font-size:0.875rem;font-weight:600;color:var(--text-mono);transition:background 0.15s}
+.btn-outline:hover{background:var(--card-hover)}
+
+/* Usage header */
+.usage-header{display:flex;flex-direction:column;gap:0.5rem}
+@media(min-width:640px){.usage-header{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+
+/* Vendor badge */
+.badge{border-radius:9999px;background:var(--badge-bg);padding:0.25rem 0.5rem;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent);flex-shrink:0}
+
+/* Flex helpers */
+.flex-between{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.flex-end-row{display:flex;flex-direction:column;gap:0.5rem}
+@media(min-width:640px){.flex-end-row{flex-direction:row;align-items:flex-start;justify-content:space-between}}
+
+/* CTA */
+.cta-grid{display:grid;gap:2rem}
+@media(min-width:1024px){.cta-grid{grid-template-columns:0.8fr 1fr;align-items:center}}
+.feature-grid{display:grid;gap:0.75rem}
+@media(min-width:640px){.feature-grid{grid-template-columns:repeat(2,1fr)}}
+.feature-tile{border-radius:0.5rem;border:1px solid var(--border2);background:var(--card);padding:1rem}
+.cta-btns{display:flex;flex-direction:column;gap:0.75rem;margin-top:1.75rem}
+@media(min-width:640px){.cta-btns{flex-direction:row}}
+
+/* AWS note */
+.aws-note{margin-top:1rem;border-top:1px solid oklch(34% 0.04 165);padding-top:0.75rem;font-size:0.75rem;line-height:1.5;color:oklch(70% 0.035 165)}
+
+/* Hero stat metrics */
+.hero-stat-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:1rem;font-size:0.75rem;color:oklch(68% 0.018 240)}
+
+/* Vendor price */
+.vendor-price-num{font-size:1.875rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text)}
+.vendor-price-period{margin-left:0.25rem;font-size:0.875rem;color:oklch(66% 0.018 240)}
+.vendor-annual{margin-top:0.25rem;font-size:0.75rem;color:var(--text-muted)}
+.vendor-details{margin-top:1rem;list-style:none;display:flex;flex-direction:column;gap:0.375rem;font-size:0.75rem;line-height:1.5;color:var(--text-body)}
+
+/* Honeycomb col */
+th.hc-th{color:oklch(80% 0.12 60)}
+
+/* Inputs grid */
+.inputs-grid{display:grid;gap:0.75rem;margin-top:1.25rem}
+</style>
+</head>
+<body>
+<main>
+
+<!-- ── Hero ── -->
+<section style="border-bottom:1px solid oklch(28% 0.012 240);padding:3rem 1rem">
+<div class="max-w-6xl hero-grid">
+  <div>
+    <p style="font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent)">Observability cost model</p>
+    <h1 style="margin-top:1rem;font-size:2.25rem;font-weight:600;letter-spacing:-0.025em;color:var(--text);max-width:48rem;line-height:1.2">Model telemetry spend before the bill arrives.</h1>
+    <p style="margin-top:1.25rem;font-size:1rem;line-height:1.75;color:var(--text-body);max-width:40rem">Enter known usage or estimate from infrastructure. The sliders use real-world gaps, so a team with ten hosts and an enterprise platform with thousands can use the same form without losing precision.</p>
+  </div>
+  <div class="hero-stat-card">
+    <p style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Current lowest SaaS estimate</p>
+    <div style="display:flex;align-items:flex-end;gap:0.5rem;margin-top:0.75rem">
+      <span id="hero-price" style="font-size:2.25rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text)">$—</span>
+      <span id="hero-vendor" style="padding-bottom:0.25rem;font-size:0.875rem;color:oklch(66% 0.018 240)">/mo, —</span>
+    </div>
+    <div class="hero-stat-metrics">
+      <div>
+        <div id="hero-metrics" style="font-family:'Manrope',monospace;color:var(--text-mono)">—</div>
+        <div>metrics/mo</div>
+      </div>
+      <div>
+        <div id="hero-logs" style="font-family:'Manrope',monospace;color:var(--text-mono)">—</div>
+        <div>logs/mo</div>
+      </div>
+      <div>
+        <div id="hero-retention" style="font-family:'Manrope',monospace;color:var(--text-mono)">—</div>
+        <div>retention</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ── Main content ── -->
+<section style="padding:2.5rem 1rem 3.5rem">
+<div class="max-w-6xl page-grid">
+
+  <!-- Left column -->
+  <div class="space-y-6">
+
+    <!-- Usage inputs -->
+    <div class="section-card">
+      <div class="usage-header">
+        <div>
+          <h2 style="font-size:1.25rem;font-weight:600;color:var(--text-94)">Usage inputs</h2>
+          <p style="margin-top:0.25rem;font-size:0.875rem;color:var(--text-68)">Drag the range or type exact values. Slider spacing is logarithmic where observability usage naturally jumps across orders of magnitude.</p>
+        </div>
+        <div class="retention-btn-group">
+          <button class="retention-btn" data-days="30" onclick="setRetention(30)">30d</button>
+          <button class="retention-btn" data-days="60" onclick="setRetention(60)">60d</button>
+          <button class="retention-btn" data-days="90" onclick="setRetention(90)">90d</button>
+          <button class="retention-btn" data-days="180" onclick="setRetention(180)">180d</button>
+        </div>
+      </div>
+      <div class="inputs-grid">
+        <div id="slider-metricsM"></div>
+        <div id="slider-logsGBDay"></div>
+        <div id="slider-tracesGBDay"></div>
+        <div id="slider-hosts"></div>
+        <div id="slider-users"></div>
+      </div>
+    </div>
+
+    <!-- Estimate from infrastructure -->
+    <div class="section-card2">
+      <div class="flex-end-row">
+        <div>
+          <h2 style="font-size:1.25rem;font-weight:600;color:var(--text-94)">Estimate from infrastructure</h2>
+          <p style="margin-top:0.25rem;font-size:0.875rem;line-height:1.625;color:var(--text-68);max-width:62ch">Use this when finance has infrastructure counts, but not telemetry volumes. The estimator keeps the assumptions visible before applying them.</p>
+        </div>
+        <button class="btn-primary" onclick="applyEstimate()">Apply estimate</button>
+      </div>
+      <div class="infra-grid">
+        <div id="slider-vms"></div>
+        <div id="slider-k8s"></div>
+        <div id="slider-databases"></div>
+        <div id="slider-services"></div>
+        <div class="full-width" id="slider-rps"></div>
+      </div>
+      <div class="infra-summary">
+        <div class="infra-stat">
+          <span class="infra-stat-label">Metrics</span>
+          <span class="infra-stat-value" id="est-metrics">—</span>
+        </div>
+        <div class="infra-stat">
+          <span class="infra-stat-label">Logs</span>
+          <span class="infra-stat-value" id="est-logs">—</span>
+        </div>
+        <div class="infra-stat">
+          <span class="infra-stat-label">Traces</span>
+          <span class="infra-stat-value" id="est-traces">—</span>
+        </div>
+        <div class="infra-stat">
+          <span class="infra-stat-label">Hosts</span>
+          <span class="infra-stat-value" id="est-hosts">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SaaS comparison -->
+    <div class="section-card">
+      <h2 style="font-size:1.25rem;font-weight:600;color:var(--text-94)">SaaS pricing comparison</h2>
+      <div class="vendor-grid" style="margin-top:1.25rem">
+        <article id="card-signoz" class="vendor-card muted">
+          <div class="flex-between">
+            <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">SigNoz Cloud</h3>
+            <span class="badge">Estimate</span>
+          </div>
+          <div style="margin-top:1rem">
+            <span id="price-signoz" class="vendor-price-num">$—</span>
+            <span class="vendor-price-period">/mo</span>
+          </div>
+          <div id="annual-signoz" class="vendor-annual">$—/year</div>
+          <ul class="vendor-details">
+            <li>$49 minimum includes usage credit</li>
+            <li>Metrics: $0.10/M samples</li>
+            <li>Logs and traces: $0.30/GB ingested</li>
+          </ul>
+        </article>
+        <article id="card-grafana" class="vendor-card muted">
+          <div class="flex-between">
+            <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">Grafana Cloud</h3>
+            <span class="badge">Estimate</span>
+          </div>
+          <div style="margin-top:1rem">
+            <span id="price-grafana" class="vendor-price-num">$—</span>
+            <span class="vendor-price-period">/mo</span>
+          </div>
+          <div id="annual-grafana" class="vendor-annual">$—/year</div>
+          <ul class="vendor-details">
+            <li>$19 platform fee</li>
+            <li>10K billable series included, then $6.50/1K</li>
+            <li>Logs and traces: 50GB each included, then $0.50/GB</li>
+            <li>3 active users included, then $8/user</li>
+          </ul>
+        </article>
+        <article id="card-newrelic" class="vendor-card muted">
+          <div class="flex-between">
+            <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">New Relic</h3>
+            <span class="badge">Estimate</span>
+          </div>
+          <div style="margin-top:1rem">
+            <span id="price-newrelic" class="vendor-price-num">$—</span>
+            <span class="vendor-price-period">/mo</span>
+          </div>
+          <div id="annual-newrelic" class="vendor-annual">$—/year</div>
+          <ul class="vendor-details">
+            <li>100GB/month ingest included</li>
+            <li>$0.40/GB after included ingest</li>
+            <li>Standard edition: first full user $10, then $99/user</li>
+          </ul>
+        </article>
+        <article id="card-datadog" class="vendor-card muted">
+          <div class="flex-between">
+            <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">Datadog</h3>
+            <span class="badge">Estimate</span>
+          </div>
+          <div style="margin-top:1rem">
+            <span id="price-datadog" class="vendor-price-num">$—</span>
+            <span class="vendor-price-period">/mo</span>
+          </div>
+          <div id="annual-datadog" class="vendor-annual">$—/year</div>
+          <ul class="vendor-details">
+            <li>Infrastructure Pro: $15/host on annual list pricing</li>
+            <li>APM Pro: $31/host on annual list pricing</li>
+            <li>Log ingest: $0.10/GB ingested</li>
+            <li>Log indexing: 20% of logs at $1.70/M events</li>
+          </ul>
+        </article>
+        <article id="card-honeycomb" class="vendor-card muted" style="grid-column:1/-1">
+          <div class="flex-between">
+            <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">Honeycomb</h3>
+            <span class="badge">Estimate</span>
+          </div>
+          <div style="margin-top:1rem">
+            <span id="price-honeycomb" class="vendor-price-num">$—</span>
+            <span class="vendor-price-period">/mo</span>
+          </div>
+          <div id="annual-honeycomb" class="vendor-annual">$—/year</div>
+          <ul class="vendor-details">
+            <li>Enterprise: $3.25/M events (logs + traces, est. ~10KB avg event size)</li>
+            <li>Metrics: $0.09/M datapoints (HNY-MET)</li>
+            <li>Includes 100 SLOs, 300 Triggers, priority support with 2hr SLA</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+
+  </div><!-- /left -->
+
+  <!-- Sidebar -->
+  <aside class="sidebar space-y-6">
+
+    <!-- Data profile -->
+    <div class="section-card2">
+      <h2 style="font-size:1.125rem;font-weight:600;color:var(--text-94)">Data profile</h2>
+      <div style="margin-top:0.75rem">
+        <div class="profile-row"><span class="profile-row-label">Metrics</span><span class="profile-row-value" id="prof-metrics">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Estimated active series</span><span class="profile-row-value" id="prof-series">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Monthly log ingest</span><span class="profile-row-value" id="prof-logs-mo">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Monthly trace ingest</span><span class="profile-row-value" id="prof-traces-mo">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Logs</span><span class="profile-row-value" id="prof-logs-stored">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Traces</span><span class="profile-row-value" id="prof-traces-stored">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Total storage</span><span class="profile-row-value" id="prof-total">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Hosts</span><span class="profile-row-value" id="prof-hosts">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Platform users</span><span class="profile-row-value" id="prof-users">—</span></div>
+      </div>
+    </div>
+
+    <!-- Self-hosted baseline -->
+    <div style="border-radius:0.75rem;border:1px solid var(--green-border2);background:var(--green-dim);padding:1.25rem">
+      <h2 style="font-size:1.125rem;font-weight:600;color:oklch(95% 0.01 165)">Self-hosted baseline</h2>
+      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.625;color:oklch(74% 0.04 165)">Open-source stacks still scale with infrastructure, but they avoid per-GB surprises and keep telemetry ownership inside your cloud account.</p>
+      <div style="margin-top:1rem" class="space-y-3" id="self-hosted-stacks"></div>
+      <p class="aws-note">AWS reference: m7i.large at $73.58/mo, m7i.xlarge at $147.17/mo, EKS at $73/cluster-mo, gp3 at $0.08/GB-mo, and S3 Standard at $0.023/GB-mo. This is infrastructure only, not a managed-service quote.</p>
+    </div>
+
+  </aside>
+</div>
+</section>
+
+<!-- ── Retention table ── -->
+<section class="retention-section">
+<div class="max-w-6xl">
+  <h2 style="font-size:1.5rem;font-weight:600;color:var(--text-94)">Cost by retention period</h2>
+  <p style="margin-top:0.5rem;font-size:0.875rem;color:var(--text-68)">Retention makes the storage curve visible. This table holds volume constant and changes only days kept.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left">Retention</th>
+          <th>SigNoz</th>
+          <th>Grafana</th>
+          <th>New Relic</th>
+          <th>Datadog</th>
+          <th style="color:var(--green-text)">LGTM baseline</th>
+          <th class="hc-th">Honeycomb</th>
+        </tr>
+      </thead>
+      <tbody id="retention-tbody"></tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ── CTA ── -->
+<section style="padding:3.5rem 1rem">
+<div class="max-w-6xl cta-grid">
+  <div>
+    <h2 style="font-size:1.875rem;font-weight:600;letter-spacing:-0.025em;color:var(--text-94);line-height:1.25">Turn the model into an operating plan.</h2>
+    <p style="margin-top:1rem;font-size:1rem;line-height:1.75;color:var(--text-body);max-width:36rem">CloudRaft designs and operates open-source observability platforms for teams that need cost control, retention policy, and production support without giving up Grafana, Prometheus, Loki, Tempo, Mimir, Thanos, or VictoriaMetrics.</p>
+    <div class="cta-btns">
+      <a href="/contact-us/" class="btn-lg-primary">Get a custom quote</a>
+      <a href="/observability-consulting/" class="btn-outline">Observability consulting</a>
+    </div>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-tile">
+      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Fixed spend envelope</h3>
+      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Plan infrastructure and storage before usage scales.</p>
+    </div>
+    <div class="feature-tile">
+      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Retention policy</h3>
+      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Keep high-value signals longer without charging every team separately.</p>
+    </div>
+    <div class="feature-tile">
+      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Data ownership</h3>
+      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Run telemetry inside your cloud account and security boundary.</p>
+    </div>
+    <div class="feature-tile">
+      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Platform support</h3>
+      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Operate the stack with dashboards, alerts, upgrades, and SLOs.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+</main>
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const S = {
+  metricsM: 1000, logsGBDay: 25, tracesGBDay: 2,
+  retention: 30, hosts: 20, users: 5,
+  vms: 12, k8s: 2, databases: 4, services: 25, rps: 1200,
+};
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const rnd = (v, step) => step < 1
+  ? Number((Math.round(v/step)*step).toFixed(2))
+  : Math.round(v/step)*step;
+
+function fmtN(n) {
+  if (n>=1e12) return `${(n/1e12).toFixed(n>=1e13?0:1)}T`;
+  if (n>=1e9)  return `${(n/1e9).toFixed(n>=1e10?0:1)}B`;
+  if (n>=1e6)  return `${(n/1e6).toFixed(n>=1e7?0:1)}M`;
+  if (n>=1e3)  return `${(n/1e3).toFixed(n>=1e4?0:1)}K`;
+  return n.toLocaleString();
+}
+function fmtGB(n) {
+  if (n>=1e6) return `${(n/1e6).toFixed(n>=1e7?0:1)} PB`;
+  if (n>=1e3) return `${(n/1e3).toFixed(n>=1e4?0:1)} TB`;
+  return `${n.toLocaleString(undefined,{maximumFractionDigits:1})} GB`;
+}
+const fmtSamples = m => `${fmtN(1e6*m)} samples`;
+const fmtMoney = n => n.toLocaleString('en-US');
+const set$ = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+
+// ── Pricing ────────────────────────────────────────────────────────────────
+const activeSeries = m => Math.max(1, Math.round(1e6*m/2592000*30));
+
+function retMult(d) {
+  if(d<=15) return 0.3; if(d<=30) return 0.4; if(d<=60) return 0.5;
+  if(d<=90) return 0.6; if(d<=180) return 0.8; return 1.0;
+}
+
+const calcSignoz = (m,l,t,r) => Math.max(49, Math.round(m*0.10 + l*30*retMult(r) + t*30*retMult(r)));
+
+function calcGrafana(m,l,t,u,r) {
+  const ser=activeSeries(m), V=l*30, q=t*30, sm=Math.max(0,r/30-1);
+  return Math.round(19
+    + Math.max(0,ser-10000)/1000*6.50
+    + Math.max(0,V-50)*0.50 + Math.max(0,q-50)*0.50
+    + Math.max(0,u-3)*8
+    + 0.10*Math.max(0,V-50)*sm + 0.10*Math.max(0,q-50)*sm);
+}
+
+const calcNewRelic = (l,t,u) => Math.max(0, Math.round(
+  Math.max(0,l*30+t*30-100)*0.40 + 10 + Math.max(0,u-1)*99));
+
+const calcDatadog = (h,l) => {
+  const V=l*30;
+  return Math.round(h*15 + h*31 + V*0.10 + 0.20*V*1048576/1e6*1.70);
+};
+
+const calcHoneycomb = (m,l,t) => {
+  // Enterprise rate card: $3.25/M events + $0.09/M metric datapoints
+  // 1 GB of structured log/trace data ≈ 0.1M events (avg ~10KB per event)
+  const eventsM = (l + t) * 30 * 0.1;
+  return Math.round(eventsM * 3.25 + m * 0.09);
+};
+
+// ── AWS cost (j() from source) ─────────────────────────────────────────────
+function awsCost(cpu, mem, ssd, obj=0, o={}) {
+  const mL=o.minLargeNodes??0, mX=o.minXlargeNodes??0;
+  const lN=Math.ceil(Math.max(cpu/2,mem/8,0));
+  const xN=Math.ceil(Math.max(cpu/4,mem/16,0));
+  const pL = o.preferLargeNodes===true && xN===0 && lN<=Math.max(mL,4);
+  const xl = pL?0:Math.max(mX,xN);
+  const la = pL?Math.max(mL,lN):(xl>0?0:mL);
+  return Math.round(147.17*xl + 73.58*la + (o.includeEks!==false?73:0) + 0.08*ssd + 0.023*obj);
+}
+
+// Loki (N() from source)
+function lokiCost(l, r) {
+  const obj=Math.ceil(l*r*0.35), ssd=Math.max(50,Math.ceil(Math.min(0.08*obj,1500)));
+  const base={obj,ssd};
+  if(l<=25)   return{...base,tier:`small distributed, <=25GB/day`,cpu:2,mem:8,cost:awsCost(2,8,ssd,obj,{minLargeNodes:1})};
+  if(l<=100)  return{...base,tier:`production distributed, <=100GB/day`,cpu:4,mem:12,cost:awsCost(4,12,ssd,obj,{minXlargeNodes:1})};
+  if(l<=500)  {const f=l/500,c=Math.ceil(6+4*f),m=Math.ceil(18+14*f);return{...base,tier:`scaled distributed, <=500GB/day`,cpu:c,mem:m,cost:awsCost(c,m,ssd,obj,{minXlargeNodes:2})};}
+  if(l<=1000) return{...base,tier:`large distributed, <=1TB/day`,cpu:14,mem:44,cost:awsCost(14,44,ssd,obj,{minXlargeNodes:3})};
+  if(l<=3000) return{...base,tier:`high-ingest distributed, <=3TB/day`,cpu:22,mem:72,cost:awsCost(22,72,ssd,obj,{minXlargeNodes:5})};
+  const T=[{max:1e5,cpu:38,mem:59},{max:1e6,cpu:433,mem:857},{max:Infinity,cpu:1221,mem:2235}];
+  const t=T.find(t=>l*30<=t.max)||T[T.length-1];
+  return{...base,tier:t.label||'~1PB+/mo',cpu:t.cpu,mem:t.mem,cost:awsCost(t.cpu,t.mem,ssd,obj,{minXlargeNodes:6})};
+}
+
+// Mimir (y() from source)
+function mimirCost(m, r) {
+  const sps=1e6*m/2592000, ser=activeSeries(m);
+  const ing=Math.max(1,sps/25000), comp=Math.max(1,3*ser/300000), qf=Math.max(1,ser/1e6), sg=Math.max(1,Math.ceil(ser/2e7));
+  const cpu=Math.ceil(ing+comp+1+1+sg), memB=ing+2.5*comp+1+1+4*sg, mem=Math.ceil(1.5*memB);
+  const ssd=Math.ceil(1.5*(5*comp+13*qf*(r/365)+300*sg));
+  return{activeSeries:ser,cpu,mem,ssd,cost:awsCost(cpu,mem,ssd,0,{includeEks:false,minLargeNodes:1})};
+}
+
+// VictoriaMetrics (from source)
+function victoriaCost(m, r) {
+  const sps=1e6*m/2592000, ser=activeSeries(m), cl=sps>=1e6;
+  const ssd=Math.ceil(1.25*Math.max(80,7e-4*m*(r/30)));
+  const cpu=Math.ceil(1.25*(cl?Math.ceil(sps/180000)+8:Math.max(2,2*Math.ceil(sps/350000))));
+  const mem=Math.ceil(1.25*(cl?4*Math.ceil(ser/3.5e6)+16:Math.max(8,8*Math.ceil(ser/8e6))));
+  return{activeSeries:ser,mode:cl?'cluster':'single-node',cpu,mem,ssd,
+    cost:awsCost(cpu,mem,ssd,0,{includeEks:false,minLargeNodes:cl?0:1,preferLargeNodes:!cl})};
+}
+
+// Thanos (from source — sidecar+compactor model)
+function thanosCost(m, tracesGB) {
+  const ser=activeSeries(m);
+  const sc=Math.max(2,Math.ceil(ser/1e6));
+  const cpu=Math.ceil(1.5*sc+Math.ceil(ser/1e6)+8);
+  const mem=Math.ceil(2*sc+Math.ceil(ser/5e5)+16);
+  const obj=Math.ceil(0.002*m*(30/30)*3);
+  return{sidecarCount:sc,cpu,mem,cost:awsCost(cpu,mem,120,obj,{includeEks:false,minLargeNodes:1})};
+}
+
+// ClickHouse (from source)
+function clickCost(l, t, m, r) {
+  const tot=l+t+0.15*m/30;
+  const ssd=Math.max(80,Math.ceil(((l+t)*r+0.15*m*(r/30))/12));
+  const T=[
+    {max:100, tier:'single-node ClickHouse, <=100GB/day',  cpu:4, mem:16,  minX:1},
+    {max:500, tier:'replicated ClickHouse, <=500GB/day',   cpu:8, mem:32,  minX:2},
+    {max:3000,tier:'sharded ClickHouse, <=3TB/day',        cpu:24,mem:96,  minX:6},
+    {max:Infinity,tier:'large ClickHouse cluster, >3TB/day',cpu:48,mem:192,minX:12},
+  ];
+  const ti=T.find(x=>tot<=x.max);
+  return{tier:ti.tier,cpu:ti.cpu,mem:ti.mem,ssd,cost:awsCost(ti.cpu,ti.mem,ssd,0,{includeEks:true,minXlargeNodes:ti.minX})};
+}
+
+function selfHosted() {
+  const{metricsM:m,logsGBDay:l,tracesGBDay:t,retention:r}=S;
+  const loki=lokiCost(l,r), mimir=mimirCost(m,r), vic=victoriaCost(m,r);
+  const thanos=thanosCost(m,t*r);
+  const click=clickCost(l,t,m,r);
+  const tempoObj=Math.ceil(0.35*t*r);
+  const tempo=awsCost(4,16,100,tempoObj,{includeEks:false,minLargeNodes:1});
+  const graf=awsCost(2,4,30,0,{includeEks:false,minLargeNodes:1});
+  return{
+    plg:       {cost:loki.cost+graf,       detail:`${loki.tier}, ${loki.cpu} vCPU / ${loki.mem}GiB for Loki`},
+    lgtm:      {cost:loki.cost+mimir.cost+tempo+graf, detail:`${loki.tier} Loki, ${fmtN(mimir.activeSeries)} active metric series`},
+    thanos:    {cost:loki.cost+thanos.cost+tempo+graf,detail:`${thanos.sidecarCount} sidecars, compactor object storage modeled`},
+    victoria:  {cost:loki.cost+vic.cost+tempo+graf,  detail:`${vic.mode}, ${fmtN(vic.activeSeries)} active metric series`},
+    clickstack:{cost:click.cost,            detail:`${click.tier}, ${click.cpu} vCPU / ${click.mem}GiB, 12x storage compression modeled`},
+  };
+}
+
+const STACKS = {
+  plg:       {name:'PLG Stack',            full:'Promtail + Loki + Grafana',              desc:'Log-first setup for teams that need reliable retention without a large platform footprint.',mode:'Loki tiered sizing'},
+  lgtm:      {name:'LGTM Stack',           full:'Loki + Grafana + Tempo + Mimir',         desc:'Balanced metrics, logs, and traces stack for production platform teams.',mode:'Loki + Mimir formulas'},
+  thanos:    {name:'Thanos + LGTM',        full:'Thanos + Loki + Grafana + Tempo',        desc:'Multi-cluster observability with long-term metric storage and predictable infrastructure.',mode:'Thanos compactor + object storage'},
+  victoria:  {name:'VictoriaMetrics + Grafana',full:'VictoriaMetrics + Grafana + Loki + Tempo',desc:'Efficient metric storage for teams watching high-cardinality workloads closely.',mode:'VictoriaMetrics capacity guidance'},
+  clickstack:{name:'ClickStack',           full:'ClickHouse + HyperDX + OpenTelemetry',   desc:'OpenTelemetry-native observability on ClickHouse for high-cardinality wide events.',mode:'ClickHouse compression model'},
+};
+
+function lgtmForRetention(days) {
+  const{metricsM:m,logsGBDay:l,tracesGBDay:t,users:u}=S;
+  const loki=lokiCost(l,days), mimir=mimirCost(m,days);
+  const tempoObj=Math.ceil(0.35*t*days);
+  const tempo=awsCost(4,16,100,tempoObj,{includeEks:false,minLargeNodes:1});
+  const graf=awsCost(2,4,30,0,{includeEks:false,minLargeNodes:1});
+  return Math.round(loki.cost+mimir.cost+tempo+graf);
+}
+
+// ── Infra estimate ─────────────────────────────────────────────────────────
+function infraEst() {
+  const{vms,k8s,databases:db,services:svc,rps}=S;
+  return{
+    metricsM: Math.round((950*vms + k8s*Math.max(vms,1)*420 + 85*svc + 650*db)*86400/1e6*30),
+    logsGBDay: Math.max(1, Math.round(0.85*vms+0.28*svc+1.6*db+8*k8s)),
+    tracesGBDay: Math.max(0.1, Number((86400*rps*0.08*1.8/1048576).toFixed(1))),
+    hosts: Math.max(vms,svc),
+  };
+}
+
+// ── Slider ─────────────────────────────────────────────────────────────────
+const v2p = (v,mn,mx,sc) => {
+  const c=clamp(v,mn,mx);
+  return sc==='linear' ? (c-mn)/(mx-mn)*1000 : (Math.log10(c)-Math.log10(mn))/(Math.log10(mx)-Math.log10(mn))*1000;
+};
+const p2v = (p,mn,mx,sc,step) => {
+  const t=clamp(p,0,1000)/1000;
+  const raw=sc==='linear' ? mn+t*(mx-mn) : Math.pow(10,Math.log10(mn)+t*(Math.log10(mx)-Math.log10(mn)));
+  return clamp(rnd(raw,step),mn,mx);
+};
+
+function makeSlider({containerId,label,key,min,max,step=1,scale='log',unit='',helperFn,marks,onInput}) {
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  const val=S[key];
+  el.innerHTML=`<div class="slider-wrap">
+    <div class="slider-header">
+      <div>
+        <label class="slider-label" for="num-${key}">${label}</label>
+        <p class="slider-helper" id="help-${key}">${helperFn(val)}</p>
+      </div>
+      <label class="slider-input-wrap">
+        <span class="sr-only">${label}</span>
+        <input type="number" id="num-${key}" value="${val}" min="${min}" max="${max}" step="${step}">
+        ${unit?`<span class="slider-unit">${unit}</span>`:''}
+      </label>
+    </div>
+    <input type="range" class="range-input" id="rng-${key}" min="0" max="1000" step="1"
+           value="${Math.round(v2p(val,min,max,scale))}" aria-label="${label} slider">
+    <div class="marks-row">${marks.map(m=>`
+      <button type="button" class="mark-btn${Math.abs(val-m.value)<=step?' active':''}"
+        data-v="${m.value}" data-key="${key}" data-min="${min}" data-max="${max}"
+        data-step="${step}" data-scale="${scale}">${m.label}</button>`).join('')}
+    </div>
+  </div>`;
+
+  document.getElementById(`num-${key}`).addEventListener('change',e=>{
+    const v=clamp(rnd(Number(e.target.value),step),min,max);
+    syncSlider(key,v,min,max,step,scale,helperFn); onInput();
+  });
+  document.getElementById(`rng-${key}`).addEventListener('input',e=>{
+    const v=p2v(Number(e.target.value),min,max,scale,step);
+    syncSlider(key,v,min,max,step,scale,helperFn); onInput();
+  });
+  el.querySelectorAll('.mark-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const v=clamp(rnd(Number(btn.dataset.v),step),min,max);
+    syncSlider(key,v,min,max,step,scale,helperFn); onInput();
+  }));
+}
+
+function syncSlider(key,val,min,max,step,scale,helperFn) {
+  S[key]=val;
+  const num=document.getElementById(`num-${key}`);
+  const rng=document.getElementById(`rng-${key}`);
+  const hlp=document.getElementById(`help-${key}`);
+  if(num) num.value=val;
+  if(rng) rng.value=Math.round(v2p(val,min,max,scale));
+  if(hlp && helperFn) hlp.textContent=helperFn(val);
+  document.querySelectorAll(`.mark-btn[data-key="${key}"]`).forEach(b=>{
+    b.classList.toggle('active', Math.abs(val-Number(b.dataset.v))<=step);
+  });
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function update() {
+  const{metricsM:m,logsGBDay:l,tracesGBDay:t,retention:r,hosts:h,users:u}=S;
+  const logsStored=l*r, tracesStored=t*r, totalStore=logsStored+tracesStored;
+  const series=activeSeries(m), perDay=Math.round(m/30);
+
+  const pSN=calcSignoz(m,l,t,r), pGR=calcGrafana(m,l,t,u,r);
+  const pNR=calcNewRelic(l,t,u), pDD=calcDatadog(h,l), pHC=calcHoneycomb(m,l,t);
+
+  const vendors=[
+    {id:'signoz',name:'SigNoz Cloud',p:pSN},
+    {id:'grafana',name:'Grafana Cloud',p:pGR},
+    {id:'newrelic',name:'New Relic',p:pNR},
+    {id:'datadog',name:'Datadog',p:pDD},
+    {id:'honeycomb',name:'Honeycomb',p:pHC},
+  ];
+  const lowest=vendors.reduce((a,b)=>a.p<=b.p?a:b);
+
+  // Hero
+  set$('hero-price',`$${fmtMoney(lowest.p)}`);
+  set$('hero-vendor',`/mo, ${lowest.name}`);
+  set$('hero-metrics',fmtSamples(m));
+  set$('hero-logs',fmtGB(logsStored));
+  set$('hero-retention',`${r} days`);
+
+  // Vendor cards
+  vendors.forEach(v=>{
+    set$(`price-${v.id}`,`$${fmtMoney(v.p)}`);
+    set$(`annual-${v.id}`,`$${fmtMoney(12*v.p)}/year`);
+    const card=document.getElementById(`card-${v.id}`);
+    if(card){card.classList.toggle('highlighted',v.id===lowest.id);card.classList.toggle('muted',v.id!==lowest.id);}
+  });
+
+  // Helper text for usage sliders
+  const h2=document.getElementById('help-logsGBDay'); if(h2) h2.textContent=`${fmtGB(logsStored)} stored for the selected retention period.`;
+  const h3=document.getElementById('help-tracesGBDay'); if(h3) h3.textContent=`${fmtGB(tracesStored)} stored for the selected retention period.`;
+  const h1=document.getElementById('help-metricsM'); if(h1) h1.textContent=`${fmtSamples(perDay)}/day. Count billable metric samples, not active series.`;
+
+  // Data profile
+  set$('prof-metrics',`${fmtSamples(m)}/mo`);
+  set$('prof-series',fmtN(series));
+  set$('prof-logs-mo',fmtGB(l*30));
+  set$('prof-traces-mo',fmtGB(t*30));
+  set$('prof-logs-stored',`${fmtGB(logsStored)}/mo`);
+  set$('prof-traces-stored',`${fmtGB(tracesStored)}/mo`);
+  set$('prof-total',fmtGB(totalStore));
+  set$('prof-hosts',fmtN(h));
+  set$('prof-users',fmtN(u));
+
+  // Self-hosted stacks
+  const sh=selfHosted();
+  document.getElementById('self-hosted-stacks').innerHTML=
+    Object.entries(STACKS).map(([k,s])=>`
+    <div class="stack-card">
+      <div class="stack-header">
+        <div><div class="stack-name">${s.name}</div><div class="stack-fullname">${s.full}</div></div>
+        <div class="stack-price">$${fmtMoney(sh[k].cost)}/mo</div>
+      </div>
+      <div class="stack-desc">${s.desc}</div>
+      <div class="stack-mode">${s.mode}: ${sh[k].detail}</div>
+    </div>`).join('');
+
+  // Retention table
+  document.getElementById('retention-tbody').innerHTML=[30,60,90,180].map(days=>{
+    const sn=calcSignoz(m,l,t,days), gr=calcGrafana(m,l,t,u,days);
+    const nr=calcNewRelic(l,t,u), dd=calcDatadog(h,l);
+    const lgtm=lgtmForRetention(days), hc=calcHoneycomb(m,l,t);
+    return`<tr>
+      <td>${days} days</td>
+      <td>$${fmtMoney(sn)}</td><td>$${fmtMoney(gr)}</td>
+      <td>$${fmtMoney(nr)}</td><td>$${fmtMoney(dd)}</td>
+      <td class="green-col">$${fmtMoney(lgtm)}</td>
+      <td class="hc-col">$${fmtMoney(hc)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateInfra() {
+  const e=infraEst();
+  set$('est-metrics',`${fmtSamples(e.metricsM)}/mo`);
+  set$('est-logs',`${fmtGB(e.logsGBDay)}/day`);
+  set$('est-traces',`${fmtGB(e.tracesGBDay)}/day`);
+  set$('est-hosts',fmtN(e.hosts));
+}
+
+window.applyEstimate=function(){
+  const e=infraEst();
+  [
+    {key:'metricsM',val:e.metricsM,min:1,max:5e6,step:1,scale:'log'},
+    {key:'logsGBDay',val:e.logsGBDay,min:0.1,max:1e6,step:0.1,scale:'log'},
+    {key:'tracesGBDay',val:e.tracesGBDay,min:0.1,max:1e5,step:0.1,scale:'log'},
+    {key:'hosts',val:e.hosts,min:1,max:1e5,step:1,scale:'log'},
+  ].forEach(({key,val,min,max,step,scale})=>syncSlider(key,clamp(rnd(val,step),min,max),min,max,step,scale,null));
+  update();
+};
+
+window.setRetention=function(days){
+  S.retention=days;
+  document.querySelectorAll('.retention-btn').forEach(b=>b.classList.toggle('active',Number(b.dataset.days)===days));
+  update();
+};
+
+// ── Init ───────────────────────────────────────────────────────────────────
+(function init(){
+  // Usage sliders
+  makeSlider({containerId:'slider-metricsM',label:'Metric samples per month',key:'metricsM',
+    min:1,max:5e6,step:1,scale:'log',unit:'M samples',
+    helperFn:v=>`${fmtSamples(Math.round(v/30))}/day. Count billable metric samples, not active series.`,
+    marks:[{label:'1M',value:1},{label:'1B',value:1e3},{label:'1T',value:1e6},{label:'5T',value:5e6}],
+    onInput:update});
+
+  makeSlider({containerId:'slider-logsGBDay',label:'Logs per day',key:'logsGBDay',
+    min:0.1,max:1e6,step:0.1,scale:'log',unit:'GB/day',
+    helperFn:v=>`${fmtGB(v*S.retention)} stored for the selected retention period.`,
+    marks:[{label:'100MB',value:0.1},{label:'100GB',value:100},{label:'10TB',value:1e4},{label:'1PB',value:1e6}],
+    onInput:update});
+
+  makeSlider({containerId:'slider-tracesGBDay',label:'Traces per day',key:'tracesGBDay',
+    min:0.1,max:1e5,step:0.1,scale:'log',unit:'GB/day',
+    helperFn:v=>`${fmtGB(v*S.retention)} stored for the selected retention period.`,
+    marks:[{label:'100MB',value:0.1},{label:'10GB',value:10},{label:'1TB',value:1e3},{label:'100TB',value:1e5}],
+    onInput:update});
+
+  makeSlider({containerId:'slider-hosts',label:'Infrastructure hosts',key:'hosts',
+    min:1,max:1e5,step:1,scale:'log',
+    helperFn:()=>'Hosts affect Datadog infrastructure and APM style pricing.',
+    marks:[{label:'1',value:1},{label:'100',value:100},{label:'10K',value:1e4},{label:'100K',value:1e5}],
+    onInput:update});
+
+  makeSlider({containerId:'slider-users',label:'Platform users',key:'users',
+    min:1,max:1e3,step:1,scale:'log',
+    helperFn:()=>'Full-access users affect New Relic and Grafana Cloud pricing. Basic dashboard viewers are often free or cheaper.',
+    marks:[{label:'1',value:1},{label:'10',value:10},{label:'100',value:100},{label:'1K',value:1e3}],
+    onInput:update});
+
+  // Infra estimator sliders
+  makeSlider({containerId:'slider-vms',label:'VMs and nodes',key:'vms',
+    min:1,max:5e4,step:1,scale:'log',
+    helperFn:()=>'Bare metal nodes, cloud instances, and Kubernetes worker nodes.',
+    marks:[{label:'1',value:1},{label:'100',value:100},{label:'5K',value:5e3},{label:'50K',value:5e4}],
+    onInput:updateInfra});
+
+  makeSlider({containerId:'slider-k8s',label:'Kubernetes clusters',key:'k8s',
+    min:1,max:1e3,step:1,scale:'log',
+    helperFn:()=>'From one startup cluster to fleet-wide regional platform clusters.',
+    marks:[{label:'1',value:1},{label:'10',value:10},{label:'100',value:100},{label:'1K',value:1e3}],
+    onInput:updateInfra});
+
+  makeSlider({containerId:'slider-databases',label:'Databases',key:'databases',
+    min:0,max:5e3,step:1,scale:'linear',
+    helperFn:()=>'Primary databases, replicas, queues, and managed data services.',
+    marks:[{label:'0',value:0},{label:'25',value:25},{label:'500',value:500},{label:'5K',value:5e3}],
+    onInput:updateInfra});
+
+  makeSlider({containerId:'slider-services',label:'Services',key:'services',
+    min:1,max:2e4,step:1,scale:'log',
+    helperFn:()=>'Instrumented services, workers, jobs, and public APIs.',
+    marks:[{label:'1',value:1},{label:'100',value:100},{label:'2K',value:2e3},{label:'20K',value:2e4}],
+    onInput:updateInfra});
+
+  makeSlider({containerId:'slider-rps',label:'Requests per second',key:'rps',
+    min:1,max:1e7,step:1,scale:'log',
+    helperFn:()=>'Average production traffic. Spikes should be modeled by raising this toward peak load.',
+    marks:[{label:'1',value:1},{label:'1K',value:1e3},{label:'1M',value:1e6},{label:'10M',value:1e7}],
+    onInput:updateInfra});
+
+  // Set initial retention
+  setRetention(S.retention);
+  updateInfra();
+  update();
+})();
+</script>
+</body>
+</html>
