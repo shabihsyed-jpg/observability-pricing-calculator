@@ -11,37 +11,37 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:oklch(13% 0.012 240);
-  --card:oklch(16% 0.011 240);
-  --card2:oklch(17% 0.012 240);
-  --card3:oklch(18% 0.012 240);
-  --input-bg:oklch(14% 0.01 240);
-  --slider-bg:oklch(33% 0.018 240);
-  --input-border:oklch(37% 0.018 240);
-  --border:oklch(29% 0.012 240);
-  --border2:oklch(31% 0.014 240);
-  --border3:oklch(34% 0.02 240);
-  --text:oklch(95% 0.01 240);
-  --text-body:oklch(70% 0.018 240);
-  --text-muted:oklch(58% 0.018 240);
-  --text-mono:oklch(91% 0.012 240);
-  --accent:oklch(72% 0.15 165);
-  --accent-hover:oklch(78% 0.14 165);
-  --accent-text:oklch(15% 0.018 165);
-  --green-text:oklch(84% 0.11 165);
-  --green-dim:oklch(18% 0.026 165);
-  --green-card:oklch(15% 0.014 165);
-  --green-border:oklch(37% 0.04 165);
-  --green-border2:oklch(42% 0.052 165);
-  --green-section:oklch(19% 0.025 165);
-  --badge-bg:oklch(25% 0.018 240);
-  --text-92:oklch(92% 0.012 240);
-  --text-94:oklch(94% 0.01 240);
-  --text-68:oklch(68% 0.018 240);
-  --text-66:oklch(66% 0.018 240);
-  --border-28:oklch(28% 0.012 240);
-  --border-27:oklch(27% 0.012 240);
-  --card-hover:oklch(20% 0.012 240);
+  --bg:#ffffff;
+  --card:oklch(97% 0.003 240);
+  --card2:oklch(96% 0.004 240);
+  --card3:oklch(94% 0.004 240);
+  --input-bg:oklch(99% 0.002 240);
+  --slider-bg:oklch(83% 0.006 240);
+  --input-border:oklch(80% 0.007 240);
+  --border:oklch(87% 0.005 240);
+  --border2:oklch(85% 0.006 240);
+  --border3:oklch(83% 0.007 240);
+  --text:oklch(12% 0.006 240);
+  --text-body:oklch(40% 0.01 240);
+  --text-muted:oklch(52% 0.01 240);
+  --text-mono:oklch(15% 0.006 240);
+  --accent:oklch(50% 0.18 165);
+  --accent-hover:oklch(44% 0.17 165);
+  --accent-text:#ffffff;
+  --green-text:oklch(36% 0.15 165);
+  --green-dim:oklch(96% 0.018 165);
+  --green-card:oklch(98% 0.01 165);
+  --green-border:oklch(72% 0.09 165);
+  --green-border2:oklch(68% 0.1 165);
+  --green-section:oklch(94% 0.025 165);
+  --badge-bg:oklch(92% 0.006 240);
+  --text-92:oklch(14% 0.006 240);
+  --text-94:oklch(12% 0.006 240);
+  --text-68:oklch(43% 0.01 240);
+  --text-66:oklch(45% 0.01 240);
+  --border-28:oklch(87% 0.005 240);
+  --border-27:oklch(88% 0.005 240);
+  --card-hover:oklch(93% 0.004 240);
 }
 html{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
 body{min-height:100vh}
@@ -76,17 +76,17 @@ input{font-family:inherit}
 .vendor-grid{display:grid;gap:1rem}
 @media(min-width:768px){.vendor-grid{grid-template-columns:repeat(2,1fr)}}
 .vendor-card{border-radius:0.5rem;border:1px solid;padding:1rem}
-.vendor-card.highlighted{border-color:oklch(40% 0.05 165);background:var(--green-section)}
-.vendor-card.muted{border-color:oklch(29% 0.012 240);background:oklch(16% 0.01 240)}
+.vendor-card.highlighted{border-color:oklch(60% 0.12 165);background:var(--green-section)}
+.vendor-card.muted{border-color:var(--border);background:var(--card)}
 
 /* Slider */
-.slider-wrap{border-radius:0.5rem;border:1px solid oklch(31% 0.014 240);background:oklch(18% 0.012 240);padding:1rem}
+.slider-wrap{border-radius:0.5rem;border:1px solid var(--border2);background:var(--card);padding:1rem}
 .slider-header{display:flex;flex-direction:column;gap:0.75rem}
 @media(min-width:640px){.slider-header{flex-direction:row;align-items:flex-start;justify-content:space-between}}
 .slider-label{display:block;font-size:0.875rem;font-weight:600;color:var(--text-mono)}
-.slider-helper{margin-top:0.25rem;font-size:0.75rem;line-height:1.5;color:oklch(68% 0.018 240);max-width:52ch}
+.slider-helper{margin-top:0.25rem;font-size:0.75rem;line-height:1.5;color:var(--text-68);max-width:52ch}
 .slider-input-wrap{display:flex;align-items:center;gap:0.5rem;border-radius:0.375rem;border:1px solid var(--input-border);background:var(--input-bg);padding:0.5rem 0.75rem;min-width:12rem;flex-shrink:0}
-.slider-input-wrap input[type=number]{width:100%;background:transparent;border:none;outline:none;text-align:right;font-family:'Manrope',monospace;font-size:0.875rem;color:oklch(94% 0.012 240);-moz-appearance:textfield}
+.slider-input-wrap input[type=number]{width:100%;background:transparent;border:none;outline:none;text-align:right;font-family:'Manrope',monospace;font-size:0.875rem;color:var(--text-mono);-moz-appearance:textfield}
 .slider-input-wrap input[type=number]::-webkit-inner-spin-button,
 .slider-input-wrap input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 .slider-unit{font-size:0.75rem;font-weight:500;color:var(--text-body);white-space:nowrap}
@@ -95,7 +95,7 @@ input{font-family:inherit}
 .range-input::-moz-range-thumb{width:1rem;height:1rem;border-radius:9999px;background:var(--accent);cursor:pointer;border:none}
 .marks-row{margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between;gap:0.5rem}
 .mark-btn{border-radius:0.25rem;padding:0.25rem 0.375rem;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);background:transparent;transition:color 0.15s;white-space:nowrap}
-.mark-btn:hover,.mark-btn.active{color:oklch(84% 0.08 165)}
+.mark-btn:hover,.mark-btn.active{color:var(--accent)}
 .mark-btn:focus-visible{outline:2px solid var(--accent)}
 
 /* Infra grid */
@@ -104,7 +104,7 @@ input{font-family:inherit}
 .full-width{grid-column:1/-1}
 
 /* Infra summary */
-.infra-summary{display:grid;gap:0;border-top:1px solid oklch(28% 0.012 240);padding-top:0;margin-top:1.25rem}
+.infra-summary{display:grid;gap:0;border-top:1px solid var(--border);padding-top:0;margin-top:1.25rem}
 @media(min-width:640px){.infra-summary{grid-template-columns:repeat(4,1fr)}}
 .infra-stat{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--border-27);padding:0.75rem 0}
 .infra-stat:last-child{border-bottom:none}
@@ -117,7 +117,7 @@ input{font-family:inherit}
 }
 
 /* Data profile rows */
-.profile-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid oklch(27% 0.012 240);padding:0.75rem 0;font-size:0.875rem}
+.profile-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--border);padding:0.75rem 0;font-size:0.875rem}
 .profile-row:last-child{border-bottom:none}
 .profile-row-label{color:var(--text-body)}
 .profile-row-value{font-family:'Manrope',monospace;color:var(--text-mono);text-align:right}
@@ -125,27 +125,14 @@ input{font-family:inherit}
 /* Self-hosted stack cards */
 .stack-card{border-radius:0.5rem;border:1px solid var(--green-border);background:var(--green-card);padding:0.75rem}
 .stack-header{display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem}
-.stack-name{font-size:0.875rem;font-weight:600;color:oklch(94% 0.01 165)}
-.stack-fullname{margin-top:0.25rem;font-size:0.75rem;color:oklch(67% 0.035 165)}
+.stack-name{font-size:0.875rem;font-weight:600;color:oklch(22% 0.12 165)}
+.stack-fullname{margin-top:0.25rem;font-size:0.75rem;color:oklch(42% 0.08 165)}
 .stack-price{text-align:right;font-family:'Manrope',monospace;font-size:0.875rem;color:var(--green-text);white-space:nowrap}
-.stack-desc{margin-top:0.5rem;font-size:0.75rem;line-height:1.5;color:oklch(72% 0.035 165)}
-.stack-mode{margin-top:0.5rem;font-size:0.75rem;line-height:1.5;color:oklch(84% 0.08 165)}
-
-/* Retention table */
-.retention-section{border-top:1px solid var(--border-28);border-bottom:1px solid var(--border-28);background:oklch(15% 0.011 240);padding:3rem 1rem}
-.table-wrap{margin-top:1.5rem;overflow-x:auto;border-radius:0.75rem;border:1px solid var(--border2)}
-table{width:100%;min-width:920px;font-size:0.875rem;border-collapse:collapse}
-thead{background:var(--card3)}
-th{padding:0.75rem 1rem;font-weight:500;color:var(--text-68);text-align:right}
-th:first-child{text-align:left}
-tbody tr{border-top:1px solid var(--border)}
-td{padding:0.75rem 1rem;text-align:right;font-family:'Manrope',monospace;color:var(--text-mono)}
-td:first-child{text-align:left;color:oklch(82% 0.014 240);font-family:'Manrope',sans-serif;font-variant-numeric:tabular-nums}
-td.green-col{color:var(--green-text)}
-td.hc-col{color:oklch(80% 0.12 60)}
+.stack-desc{margin-top:0.5rem;font-size:0.75rem;line-height:1.5;color:oklch(40% 0.07 165)}
+.stack-mode{margin-top:0.5rem;font-size:0.75rem;line-height:1.5;color:oklch(38% 0.12 165)}
 
 /* Retention buttons */
-.retention-btn-group{display:flex;border-radius:0.5rem;border:1px solid oklch(34% 0.018 240);background:var(--input-bg);padding:0.25rem;flex-shrink:0}
+.retention-btn-group{display:flex;border-radius:0.5rem;border:1px solid var(--border2);background:var(--input-bg);padding:0.25rem;flex-shrink:0}
 .retention-btn{border-radius:0.375rem;padding:0.375rem 0.75rem;font-size:0.875rem;font-weight:500;transition:background 0.15s,color 0.15s;color:var(--text-68);white-space:nowrap}
 .retention-btn:hover{color:var(--text-mono)}
 .retention-btn.active{background:var(--accent);color:var(--accent-text)}
@@ -156,7 +143,7 @@ td.hc-col{color:oklch(80% 0.12 60)}
 .btn-primary:hover{background:var(--accent-hover)}
 .btn-lg-primary{display:inline-flex;justify-content:center;align-items:center;border-radius:0.375rem;background:var(--accent);padding:0.75rem 1.25rem;font-size:0.875rem;font-weight:600;color:var(--accent-text);transition:background 0.15s}
 .btn-lg-primary:hover{background:var(--accent-hover)}
-.btn-outline{display:inline-flex;justify-content:center;align-items:center;border-radius:0.375rem;border:1px solid oklch(38% 0.018 240);padding:0.75rem 1.25rem;font-size:0.875rem;font-weight:600;color:var(--text-mono);transition:background 0.15s}
+.btn-outline{display:inline-flex;justify-content:center;align-items:center;border-radius:0.375rem;border:1px solid var(--border2);padding:0.75rem 1.25rem;font-size:0.875rem;font-weight:600;color:var(--text-mono);transition:background 0.15s}
 .btn-outline:hover{background:var(--card-hover)}
 
 /* Usage header */
@@ -171,29 +158,17 @@ td.hc-col{color:oklch(80% 0.12 60)}
 .flex-end-row{display:flex;flex-direction:column;gap:0.5rem}
 @media(min-width:640px){.flex-end-row{flex-direction:row;align-items:flex-start;justify-content:space-between}}
 
-/* CTA */
-.cta-grid{display:grid;gap:2rem}
-@media(min-width:1024px){.cta-grid{grid-template-columns:0.8fr 1fr;align-items:center}}
-.feature-grid{display:grid;gap:0.75rem}
-@media(min-width:640px){.feature-grid{grid-template-columns:repeat(2,1fr)}}
-.feature-tile{border-radius:0.5rem;border:1px solid var(--border2);background:var(--card);padding:1rem}
-.cta-btns{display:flex;flex-direction:column;gap:0.75rem;margin-top:1.75rem}
-@media(min-width:640px){.cta-btns{flex-direction:row}}
-
 /* AWS note */
-.aws-note{margin-top:1rem;border-top:1px solid oklch(34% 0.04 165);padding-top:0.75rem;font-size:0.75rem;line-height:1.5;color:oklch(70% 0.035 165)}
+.aws-note{margin-top:1rem;border-top:1px solid oklch(75% 0.06 165);padding-top:0.75rem;font-size:0.75rem;line-height:1.5;color:oklch(42% 0.07 165)}
 
 /* Hero stat metrics */
-.hero-stat-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:1rem;font-size:0.75rem;color:oklch(68% 0.018 240)}
+.hero-stat-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:1rem;font-size:0.75rem;color:var(--text-68)}
 
 /* Vendor price */
 .vendor-price-num{font-size:1.875rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text)}
-.vendor-price-period{margin-left:0.25rem;font-size:0.875rem;color:oklch(66% 0.018 240)}
+.vendor-price-period{margin-left:0.25rem;font-size:0.875rem;color:var(--text-66)}
 .vendor-annual{margin-top:0.25rem;font-size:0.75rem;color:var(--text-muted)}
 .vendor-details{margin-top:1rem;list-style:none;display:flex;flex-direction:column;gap:0.375rem;font-size:0.75rem;line-height:1.5;color:var(--text-body)}
-
-/* Honeycomb col */
-th.hc-th{color:oklch(80% 0.12 60)}
 
 /* Inputs grid */
 .inputs-grid{display:grid;gap:0.75rem;margin-top:1.25rem}
@@ -203,7 +178,7 @@ th.hc-th{color:oklch(80% 0.12 60)}
 <main>
 
 <!-- ── Hero ── -->
-<section style="border-bottom:1px solid oklch(28% 0.012 240);padding:3rem 1rem">
+<section style="border-bottom:1px solid oklch(87% 0.005 240);padding:3rem 1rem">
 <div class="max-w-6xl hero-grid">
   <div>
     <p style="font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.18em;color:var(--accent)">Observability cost model</p>
@@ -214,7 +189,7 @@ th.hc-th{color:oklch(80% 0.12 60)}
     <p style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Current lowest SaaS estimate</p>
     <div style="display:flex;align-items:flex-end;gap:0.5rem;margin-top:0.75rem">
       <span id="hero-price" style="font-size:2.25rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text)">$—</span>
-      <span id="hero-vendor" style="padding-bottom:0.25rem;font-size:0.875rem;color:oklch(66% 0.018 240)">/mo, —</span>
+      <span id="hero-vendor" style="padding-bottom:0.25rem;font-size:0.875rem;color:oklch(45% 0.01 240)">/mo, —</span>
     </div>
     <div class="hero-stat-metrics">
       <div>
@@ -304,6 +279,22 @@ th.hc-th{color:oklch(80% 0.12 60)}
     <div class="section-card">
       <h2 style="font-size:1.25rem;font-weight:600;color:var(--text-94)">SaaS pricing comparison</h2>
       <div class="vendor-grid" style="margin-top:1.25rem">
+        <article id="card-honeycomb" class="vendor-card muted">
+          <div class="flex-between">
+            <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">Honeycomb</h3>
+            <span class="badge">Estimate</span>
+          </div>
+          <div style="margin-top:1rem">
+            <span id="price-honeycomb" class="vendor-price-num">$—</span>
+            <span class="vendor-price-period">/mo</span>
+          </div>
+          <div id="annual-honeycomb" class="vendor-annual">$—/year</div>
+          <ul class="vendor-details">
+            <li>Enterprise: $3.25/M events (logs + traces, est. ~10KB avg event size)</li>
+            <li>Metrics: $0.09/M datapoints (HNY-MET)</li>
+            <li>Includes 100 SLOs, 300 Triggers, priority support with 2hr SLA</li>
+          </ul>
+        </article>
         <article id="card-signoz" class="vendor-card muted">
           <div class="flex-between">
             <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">SigNoz Cloud</h3>
@@ -370,22 +361,6 @@ th.hc-th{color:oklch(80% 0.12 60)}
             <li>Log indexing: 20% of logs at $1.70/M events</li>
           </ul>
         </article>
-        <article id="card-honeycomb" class="vendor-card muted" style="grid-column:1/-1">
-          <div class="flex-between">
-            <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-mono)">Honeycomb</h3>
-            <span class="badge">Estimate</span>
-          </div>
-          <div style="margin-top:1rem">
-            <span id="price-honeycomb" class="vendor-price-num">$—</span>
-            <span class="vendor-price-period">/mo</span>
-          </div>
-          <div id="annual-honeycomb" class="vendor-annual">$—/year</div>
-          <ul class="vendor-details">
-            <li>Enterprise: $3.25/M events (logs + traces, est. ~10KB avg event size)</li>
-            <li>Metrics: $0.09/M datapoints (HNY-MET)</li>
-            <li>Includes 100 SLOs, 300 Triggers, priority support with 2hr SLA</li>
-          </ul>
-        </article>
       </div>
     </div>
 
@@ -412,8 +387,8 @@ th.hc-th{color:oklch(80% 0.12 60)}
 
     <!-- Self-hosted baseline -->
     <div style="border-radius:0.75rem;border:1px solid var(--green-border2);background:var(--green-dim);padding:1.25rem">
-      <h2 style="font-size:1.125rem;font-weight:600;color:oklch(95% 0.01 165)">Self-hosted baseline</h2>
-      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.625;color:oklch(74% 0.04 165)">Open-source stacks still scale with infrastructure, but they avoid per-GB surprises and keep telemetry ownership inside your cloud account.</p>
+      <h2 style="font-size:1.125rem;font-weight:600;color:oklch(20% 0.12 165)">Self-hosted baseline</h2>
+      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.625;color:oklch(38% 0.08 165)">Open-source stacks still scale with infrastructure, but they avoid per-GB surprises and keep telemetry ownership inside your cloud account.</p>
       <div style="margin-top:1rem" class="space-y-3" id="self-hosted-stacks"></div>
       <p class="aws-note">AWS reference: m7i.large at $73.58/mo, m7i.xlarge at $147.17/mo, EKS at $73/cluster-mo, gp3 at $0.08/GB-mo, and S3 Standard at $0.023/GB-mo. This is infrastructure only, not a managed-service quote.</p>
     </div>
@@ -422,61 +397,7 @@ th.hc-th{color:oklch(80% 0.12 60)}
 </div>
 </section>
 
-<!-- ── Retention table ── -->
-<section class="retention-section">
-<div class="max-w-6xl">
-  <h2 style="font-size:1.5rem;font-weight:600;color:var(--text-94)">Cost by retention period</h2>
-  <p style="margin-top:0.5rem;font-size:0.875rem;color:var(--text-68)">Retention makes the storage curve visible. This table holds volume constant and changes only days kept.</p>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th style="text-align:left">Retention</th>
-          <th>SigNoz</th>
-          <th>Grafana</th>
-          <th>New Relic</th>
-          <th>Datadog</th>
-          <th style="color:var(--green-text)">LGTM baseline</th>
-          <th class="hc-th">Honeycomb</th>
-        </tr>
-      </thead>
-      <tbody id="retention-tbody"></tbody>
-    </table>
-  </div>
-</div>
-</section>
 
-<!-- ── CTA ── -->
-<section style="padding:3.5rem 1rem">
-<div class="max-w-6xl cta-grid">
-  <div>
-    <h2 style="font-size:1.875rem;font-weight:600;letter-spacing:-0.025em;color:var(--text-94);line-height:1.25">Turn the model into an operating plan.</h2>
-    <p style="margin-top:1rem;font-size:1rem;line-height:1.75;color:var(--text-body);max-width:36rem">CloudRaft designs and operates open-source observability platforms for teams that need cost control, retention policy, and production support without giving up Grafana, Prometheus, Loki, Tempo, Mimir, Thanos, or VictoriaMetrics.</p>
-    <div class="cta-btns">
-      <a href="/contact-us/" class="btn-lg-primary">Get a custom quote</a>
-      <a href="/observability-consulting/" class="btn-outline">Observability consulting</a>
-    </div>
-  </div>
-  <div class="feature-grid">
-    <div class="feature-tile">
-      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Fixed spend envelope</h3>
-      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Plan infrastructure and storage before usage scales.</p>
-    </div>
-    <div class="feature-tile">
-      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Retention policy</h3>
-      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Keep high-value signals longer without charging every team separately.</p>
-    </div>
-    <div class="feature-tile">
-      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Data ownership</h3>
-      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Run telemetry inside your cloud account and security boundary.</p>
-    </div>
-    <div class="feature-tile">
-      <h3 style="font-size:0.875rem;font-weight:600;color:var(--text-92)">Platform support</h3>
-      <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--text-68)">Operate the stack with dashboards, alerts, upgrades, and SLOs.</p>
-    </div>
-  </div>
-</div>
-</section>
 
 </main>
 <script>
