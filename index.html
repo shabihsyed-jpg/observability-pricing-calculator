@@ -324,7 +324,7 @@ input{font-family:inherit}
           <ul class="vendor-details">
             <li>$19 platform fee</li>
             <li>10K billable series included, then $6.50/1K</li>
-            <li>Logs and traces: 50GB each included, then $0.50/GB</li>
+            <li>Logs and traces: 50GB each included, then $0.55/GB</li>
             <li>3 active users included, then $8/user</li>
           </ul>
         </article>
@@ -356,7 +356,8 @@ input{font-family:inherit}
           <div id="annual-datadog" class="vendor-annual">$—/year</div>
           <ul class="vendor-details">
             <li>Infrastructure Pro: $15/host on annual list pricing</li>
-            <li>APM Pro: $31/host on annual list pricing</li>
+            <li>APM Pro: $35/host on annual list pricing</li>
+            <li>APM ingested spans: $0.10/GB</li>
             <li>Log ingest: $0.10/GB ingested</li>
             <li>Log indexing: 20% of logs at $1.70/M events</li>
           </ul>
@@ -438,13 +439,13 @@ function retMult(d) {
   if(d<=90) return 0.6; if(d<=180) return 0.8; return 1.0;
 }
 
-const calcSignoz = (m,l,t,r) => Math.max(49, Math.round(m*0.10 + l*30*retMult(r) + t*30*retMult(r)));
+const calcSignoz = (m,l,t) => Math.max(49, Math.round(m*0.10 + l*30*0.30 + t*30*0.30));
 
 function calcGrafana(m,l,t,u,r) {
   const ser=activeSeries(m), V=l*30, q=t*30, sm=Math.max(0,r/30-1);
   return Math.round(19
     + Math.max(0,ser-10000)/1000*6.50
-    + Math.max(0,V-50)*0.50 + Math.max(0,q-50)*0.50
+    + Math.max(0,V-50)*0.55 + Math.max(0,q-50)*0.55
     + Math.max(0,u-3)*8
     + 0.10*Math.max(0,V-50)*sm + 0.10*Math.max(0,q-50)*sm);
 }
@@ -452,9 +453,16 @@ function calcGrafana(m,l,t,u,r) {
 const calcNewRelic = (l,t,u) => Math.max(0, Math.round(
   Math.max(0,l*30+t*30-100)*0.40 + 10 + Math.max(0,u-1)*99));
 
-const calcDatadog = (h,l) => {
-  const V=l*30;
-  return Math.round(h*15 + h*31 + V*0.10 + 0.20*V*1048576/1e6*1.70);
+const calcDatadog = (h,l,t) => {
+  const V=l*30, T=t*30;
+  const logIndex = 0.20*V*1048576/1e6*1.70;
+  return Math.round(
+    h*15          // Infrastructure Pro: $15/host
+    + h*35        // APM Pro: $35/host
+    + V*0.10      // Log ingest: $0.10/GB
+    + logIndex    // Log indexing: 20% of events at $1.70/M
+    + T*0.10      // APM ingested spans: $0.10/GB
+  );
 };
 
 const calcHoneycomb = (m,l,t) => {
@@ -646,8 +654,8 @@ function update() {
   const logsStored=l*r, tracesStored=t*r, totalStore=logsStored+tracesStored;
   const series=activeSeries(m), perDay=Math.round(m/30);
 
-  const pSN=calcSignoz(m,l,t,r), pGR=calcGrafana(m,l,t,u,r);
-  const pNR=calcNewRelic(l,t,u), pDD=calcDatadog(h,l), pHC=calcHoneycomb(m,l,t);
+  const pSN=calcSignoz(m,l,t), pGR=calcGrafana(m,l,t,u,r);
+  const pNR=calcNewRelic(l,t,u), pDD=calcDatadog(h,l,t), pHC=calcHoneycomb(m,l,t);
 
   const vendors=[
     {id:'signoz',name:'SigNoz Cloud',p:pSN},
@@ -702,19 +710,6 @@ function update() {
       <div class="stack-mode">${s.mode}: ${sh[k].detail}</div>
     </div>`).join('');
 
-  // Retention table
-  document.getElementById('retention-tbody').innerHTML=[30,60,90,180].map(days=>{
-    const sn=calcSignoz(m,l,t,days), gr=calcGrafana(m,l,t,u,days);
-    const nr=calcNewRelic(l,t,u), dd=calcDatadog(h,l);
-    const lgtm=lgtmForRetention(days), hc=calcHoneycomb(m,l,t);
-    return`<tr>
-      <td>${days} days</td>
-      <td>$${fmtMoney(sn)}</td><td>$${fmtMoney(gr)}</td>
-      <td>$${fmtMoney(nr)}</td><td>$${fmtMoney(dd)}</td>
-      <td class="green-col">$${fmtMoney(lgtm)}</td>
-      <td class="hc-col">$${fmtMoney(hc)}</td>
-    </tr>`;
-  }).join('');
 }
 
 function updateInfra() {
